@@ -28,7 +28,7 @@ function check_or_create_dir() {
 
 function get_monitor_names() {
   system_profiler SPDisplaysDataType -json |
-  jq -r '.SPDisplaysDataType[1].spdisplays_ndrvs | .[] | ._name' | 
+  jq -r '.SPDisplaysDataType[1].spdisplays_ndrvs | .[] | ._name' |
   tr -d ' \t' |
   tr '[:upper:]' '[:lower:]'
 }
@@ -49,9 +49,9 @@ function screenshot_loop() {
         if [ ! -f /tmp/trackerpause ]; then
             ts=$(date +"%H%M%S")
             monitor_ix=1
-            while read -r monitor_name; do 
+            while read -r monitor_name; do
               targetdir="${dailydir}/${ts}_${monitor_name}.jpg"
-              if screenIsLocked; then 
+              if screenIsLocked; then
                 continue
                 #errors if try to take a screencapture while screen locked
               fi

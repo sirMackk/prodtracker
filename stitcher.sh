@@ -1,4 +1,4 @@
-#!/bin/bash  -l
+#!/bin/bash -l
 set -x
 set -e
 
@@ -13,11 +13,11 @@ function set_todays() {
 }
 
 #List all monitor names that were used in dir
-function get_monitor_names() { 
+function get_monitor_names() {
   find "$1" -type f -name '*.jpg'  |
   tr '_\.' ' ' |
-  cut -d' ' -f2 | 
-  sort | 
+  cut -d' ' -f2 |
+  sort |
   uniq |
   awk 'NF' #remove empty lines
 }
@@ -44,7 +44,7 @@ function stitch() {
         rm $text_file
       '
 
-    #generate video from the new images 
+    #generate video from the new images
     echo "Generating video(s) for $monitor_name in $targetdir: $output_file"
     ffmpeg -r ${framerate} \
       -f image2 \
@@ -76,19 +76,19 @@ function main() {
         if [ "${date_now}" != "${todays}" ]; then
             set_todays
         fi
-        
-        while read -r day_dir; do 
+
+        while read -r day_dir; do
             # Do not stitch or clean today's directory, only those from the past.
             if [ "${day_dir: -6}" == "${todays}" ] ; then
                 continue
             fi
             #function is only evaluated at the start
-            while read -r monitor_name; do 
+            while read -r monitor_name; do
               # Use summary.mp4 as a marker whether a directory has been processed or not.
               output_file="$day_dir/summary_${monitor_name}.mp4"
               if [ ! -f "${output_file}" ]; then
                   echo "starting $output_file"
-                  stitch "$day_dir" "$monitor_name" 
+                  stitch "$day_dir" "$monitor_name"
                   clean "$day_dir" "$monitor_name"
               fi
             done < <(get_monitor_names "$day_dir")
