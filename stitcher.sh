@@ -25,7 +25,7 @@ function get_monitor_names() {
 function stitch() {
     targetdir="$1"
     monitor_name="$2"
-    output_file="${targetdir}/summary_${monitor_name}.mp4"
+    output_file="${targetdir}/summary_${monitor_name}.mov"
 
     #write images to have the filename timestamp HMS embedded as H:M:S
     echo "Adding timestamps to images for $monitor_name in $targetdir"
