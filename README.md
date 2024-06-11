@@ -21,6 +21,15 @@ crontab ~/.crontab
 
 Make sure you specify the TARGETDIR, cd, and DISPLAY variables correctly! If it's not working, check syslog logs.
 
+
+Another option is to make both scripts a service. 
+You'll need to grant permissions for screenrecording, else all the screenshots will be empty. There will only be the wallpaper.
+https://apple.stackexchange.com/questions/444670/giving-screen-recording-permissions-to-a-shell-script-called-by-launchd
+Privacy & Security > Screen Recording > '+' > cmd+shft+G > 
+Then if you've started the tracker.sh as a service add the 3 scripts /bin/bash /System/Library/CoreServices/launchservicesd /usr/sbin/screencapture 
+If you've started tracker.sh via a cron: /usr/sbin/cron
+
+
 ## To playback from multiple monitors simultaneously
 Open all videos with `open summary_*`. This commands assume you open 3 monitors, add or delete lines as appropriate.
 
