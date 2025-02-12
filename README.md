@@ -89,6 +89,18 @@ restart_vids_back 8 0.7
 
 # To cleanup mp4 that have become corropted
 convert to .mov if on mac: https://cloudconvert.com/mp4-to-mov
+# Cleanup any extra files
+` ~/prodtracker/ -type f  -mtime +2 | grep -v summary | xargs -I{} rm {}`
+
+# To move to external backup
+move every file to backup that was created more than 30 days ago. This was quite slow.
+```
+find ~/prodtracker/ -mtime -30 -type d -mindepth 1 | cut -f5,6 -d'/' | sed 's|$|/|' | sort > ~/prodtracker/exclude_dirs.txt 
+# dryrun is
+rsync -avunP --exclude-from=exclude_dirs.txt --remove-source-files  ~/prodtracker/  /Volumes/File\ Storage\ Not\ Backups/
+
+rsync -avuP --exclude-from=exclude_dirs.txt --remove-source-files  ~/prodtracker/  /Volumes/File\ Storage\ Not\ Backups/
+```
 
 ## TODO
 
