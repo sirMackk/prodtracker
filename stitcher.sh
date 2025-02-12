@@ -64,8 +64,8 @@ function clean() {
     monitor_name="$2"
     if [ "$(find "${targetdir}" -name '*.jpeg' -o -name '*.jpg' | wc -l)" -gt 0 ]; then
         echo "Deleting *_${monitor_name}.jpeg/jpg files in ${targetdir}"
-        rm "${targetdir}"/*_"${monitor_name}".jpg || true
-        rm "${targetdir}"/*_"${monitor_name}".jpeg || true
+        rm -f "${targetdir}"/*_"${monitor_name}".jpg
+        rm -f "${targetdir}"/*_"${monitor_name}".jpeg
     fi
 }
 
@@ -83,8 +83,8 @@ function main() {
                 continue
             fi
             
-            # dont run if no images
-            if find "$day_dir" -type f -name '*.jpg' -print -quit > /dev/null 2>&1; then
+            # dont run if no images; started to need this in macos15?
+            if ! find "$day_dir" -type f -name '*.jpg' -print -quit > /dev/null 2>&1; then
                 continue
             fi
             #function is only evaluated at the start
