@@ -34,7 +34,7 @@ function stitch() {
         timestamp=$(NF-1)
         print $0,substr(timestamp,1,2)":"substr(timestamp,3,2)":"substr(timestamp,5,2)
       }'   |
-      xargs -L1 -P8 bash -c '
+      xargs -L1 -P8  zsh -c '
         file="$0"
         time=$1
         out_file="${file/.jpg/_mod.jpg}"
@@ -42,7 +42,7 @@ function stitch() {
         echo $time > $text_file
         ffmpeg -i "$file" -vf "drawtext=:fontsize=28:textfile=$text_file:fontcolor=white@0.8:x=7:y=h-th-10" "$out_file" 2>/dev/null
         rm $text_file
-      '
+      ' 
 
     #generate video from the new images
     echo "Generating video(s) for $monitor_name in $targetdir: $output_file"
@@ -80,6 +80,11 @@ function main() {
         while read -r day_dir; do
             # Do not stitch or clean today's directory, only those from the past.
             if [ "${day_dir: -6}" == "${todays}" ] ; then
+                continue
+            fi
+            
+            # dont run if no images
+            if find "$day_dir" -type f -name '*.jpg' -print -quit > /dev/null 2>&1; then
                 continue
             fi
             #function is only evaluated at the start
