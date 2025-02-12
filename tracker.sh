@@ -26,13 +26,29 @@ function check_or_create_dir() {
     fi
 }
 
-function get_monitor_names() {
-  system_profiler SPDisplaysDataType -json |
-  jq -r '.SPDisplaysDataType[1].spdisplays_ndrvs | .[] | ._name' |
-  tr -d ' \t' |
-  tr '[:upper:]' '[:lower:]'
-}
 
+function get_monitor_names() {
+  # First, try to get monitor names using system_profiler
+  local names=$(system_profiler SPDisplaysDataType -json | 
+                jq -r '.SPDisplaysDataType[].spdisplays_ndrvs | .[]._name' 2>/dev/null | 
+                tr -d ' \t' | 
+                tr '[:upper:]' '[:lower:]')
+  
+  # If the above fails or returns empty, fall back to a simpler method
+  if [ -z "$names" ]; then
+    names=$(system_profiler SPDisplaysDataType | 
+            awk '/Display Type/ {print $3}' | 
+            tr -d ' \t' | 
+            tr '[:upper:]' '[:lower:]')
+  fi
+  
+  # If we still don't have any names, use a default
+  if [ -z "$names" ]; then
+    names="display1"
+  fi
+  
+  echo "$names"
+}
 function screenshot_loop() {
     #Change to writing jpegs
     defaults write com.apple.screencapture type jpg;killall SystemUIServer
